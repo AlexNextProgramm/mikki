@@ -1,0 +1,2 @@
+#!/bin/bash
+~/Рабочий\ стол/PROJECT/mikki/venv/bin/python "/home/aleksandr/Рабочий стол/PROJECT/mikki/recognize.py"
