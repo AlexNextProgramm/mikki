@@ -1,0 +1,12 @@
+[Unit]
+Description=запуск асистента
+
+[Service]
+ExecStart="/home/aleksandr/.config/mikki/assistant"
+WorkingDirectory=/home/aleksandr/.config/mikki
+StandardOutput=append:/home/aleksandr/.config/mikki/journal
+StandardError=append:/home/aleksandr/.config/mikki/journal
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

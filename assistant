@@ -1,2 +1,19 @@
 #!/bin/bash
+#  Путь к файлу
+export EXTRA_OPTS
+sources ~/.bashrc
+log_file="/home/aleksandr/Рабочий стол/PROJECT/mikki/journal/log.txt"
+pid_file="/home/aleksandr/Рабочий стол/PROJECT/mikki/journal/pid.txt"
+# Проверяем, существует ли файл
+if [ -f "$log_file" ]; then
+    rm "$log_file"
+fi
+
+if [ -f "$pid_file" ]; then
+    rm "$pid_file"
+fi
+
+PID=$$
+echo $PID > "$pid_file"
 ~/Рабочий\ стол/PROJECT/mikki/venv/bin/python "/home/aleksandr/Рабочий стол/PROJECT/mikki/recognize.py"
+

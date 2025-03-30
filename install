@@ -4,3 +4,8 @@ sudo apt-get install -y alsa-utils
  python3 -m venv venv
  source venv/bin/activate && pip install vosk && sudo apt install portaudio19-dev && pip install pyaudio
 #  MODEL https://alphacephei.com/vosk/models
+
+
+# Установить  демона 
+sudo ln -s "/home/aleksandr/Рабочий стол/PROJECT/mikki/mikki.autostart.desktop" ~/.config/autostart/mikki.descktop
+sudo ln -s "/home/aleksandr/Рабочий стол/PROJECT/mikki/assistant" "/home/aleksandr/.config/assistant"

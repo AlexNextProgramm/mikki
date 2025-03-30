@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Exec=/home/aleksandr/.config/mikki/assistant
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+Name=My Script
+Comment=This is my script

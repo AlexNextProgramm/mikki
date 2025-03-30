@@ -13,10 +13,10 @@ import Mikki  # Теперь импорт должен работать
 sys.stderr = open(os.devnull, 'w')
 # Установите уровень логирования на 0 (отключить)
 SetLogLevel(0)
-
+model_path = os.path.join(os.path.dirname(__file__), "model/vosk-model-small-ru-0.22")
 # Инициализация модели
-modelRU = Model("model/vosk-model-small-ru-0.22")
-# modelEN = Model("model/vosk-model-small-en-us-0.15")
+modelRU = Model(model_path)
+# modelEN = Model(os.path.join(os.path.dirname(__file__) , "model/vosk-model-small-en-us-0.15"))
 recognizerRU = KaldiRecognizer(modelRU, 16000)
 # recognizerEN = KaldiRecognizer(modelEN, 16000)
 
@@ -30,9 +30,10 @@ stream = p.open(format=pyaudio.paInt16,
 stream.start_stream()
 
 print("Слушаю...")
+Mikki.voice('weke_up')
 initMikkiBool = False
 init_time = None
-live_time = 30
+live_time = 40
 listen_time = 2
 ini_listen = None
 previous_textRU = ""
@@ -59,6 +60,7 @@ try:
 
         if  textRU and textRU != previous_textRU:
             previous_textRU = textRU
+            print(textRU)
             final_text = textRU.strip()  # Добавляем новое распознанное слово
             # print("textRU :", textRU)
             # print("final_text :", final_text.strip())
@@ -66,6 +68,7 @@ try:
         if time.time() - last_update_time > 2.6:  # 3 секунды
             if final_text.strip() and initMikkiBool:  # Если есть текст для обработки
                 print("Запуск команды Mikki с текстом:", final_text)
+                init_time = time.time()
                 if Mikki.MikkiCommand(final_text):
                     initMikkiBool = False
                 final_text = ""  # Очищаем финальный текст после выполнения команды
@@ -79,11 +82,12 @@ try:
 
         if init_time is not None and time.time() - init_time > live_time:
             print("Микки уснул...")
-            # Mikki.voice("sleep")
+            Mikki.voice("sleep")
             final_text = ""
             initMikkiBool = False
             init_time = None
         textRU = ""
+        # textEN = ""
 except Exception as e:
     print("Произошла ошибка:", e)
 # Закрытие потока и PyAudio (в данном случае это не будет достигнуто, но для полноты)

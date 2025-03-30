@@ -2,6 +2,12 @@
 import subprocess
 import os
 import re
+import sys
+import Comandos
+commands = Comandos.commands
+commandMiki = Comandos.commandMiki
+Name = Comandos.Name
+deleteName = Comandos.delete
 def levenshtein_distance(s1, s2):
     if len(s1) < len(s2):
         return levenshtein_distance(s2, s1)
@@ -33,31 +39,7 @@ def find_closest_command(command_list, input_command):
 
     return closest_command, min_distance
 
-# Пример использования
-commands = {
-    "закрой браузер" : {'command' : "pkill chrome" , "voice" : "close_chrome" },
-    "открой бразузер" : {'command' : "google-chrome" , "voice" : "open_chrome" },
-    "музыка": {'command' : "google-chrome https://music.yandex.ru/ "},
-    "найди": { 'command': "google-chrome https://www.google.com/search?q=[найди]" }
 
-}
-
-commandMiki = [
-    "бай",
-    "стоп",
-    "да",
-    "отдыхай"
-]
-
-
-
-Name = {
-    # "привет юля",
-    # "юля",
-    "привет микки",
-    "микки",
-    "мики"
-}
 
 def voice(command):
     current_script_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "uploads", f"{command}.wav")
@@ -76,59 +58,47 @@ def MikkiInit(textRU):
         INIT = True
         if (MikkiCommand(textRU)):
              INIT = False
-        voice("hi")
+        else :
+            voice("activate")
     return INIT
 
 deafCommand = ""
 search = "" 
 def MikkiCommand(textRU):
     textRU = wordDelete(textRU)
+    if textRU == '':
+        return False
     global deafCommand
     global search
     cmdM, disM = find_closest_command(commandMiki, textRU)
 
     if(disM != 0):
         cmdM = ""
-
-    if "найди" in textRU or search != "" :
-        search += textRU
-        google = commands.get("найди").get('command')
-        if textRU.strip() == "найди" :
-            search = " "
-            return False
-        
-        search = search.replace('найди', "").strip()
-        search = search.replace(' ', '+').strip()
-        google = google.replace('[найди]', search)
-        
-        print("Запускаю команду: Найди")
-        voice("start_programm")
-        try:
-            # Execute the command using subprocess
-            subprocess.Popen(google, shell=True)
-            print(google)
-            print(search)
-            search = ""
-        except Exception as e:
-            print("Ошибка при выполнении команды:", e)
-        return True
+    searchC = searthCMD(textRU)
+    if (searchC is not None):
+        return searchC
 
 
     closest_command, distance = find_closest_command(commands.keys(), textRU)  # Убедитесь, что 'commands' доступен
     print(closest_command, " ", distance)
-    if (cmdM == "да" ):
-        closest_command = deafCommand
+    if (cmdM == "да" and deafCommand ):
+        closest_command = deafCommand.strip()
         deafCommand = ""
         distance = 0
+    if (cmdM == "умри"):
+        voice("ded")
+        sys.exit(0)
+        # distance = 0
 
-    if ( cmdM == "стоп" or cmdM == "отдыхай" or cmdM == "бай" ):
+    if ( cmdM == "стоп" or cmdM == "отдыхай" or cmdM == "бай" or cmdM == "отдыхать" ):
         print("Деинциализация Микки")
-        voice("bye")
+        voice("start_command")
         return True
 
     if distance <= 1:
         print("Запускаю команду:", closest_command)
-        voice("start_programm")
+        deafCommand = ""
+        voice("start_command")
         try:
             # Execute the command using subprocess
             subprocess.Popen(commands.get(closest_command).get('command'), shell=True)
@@ -138,11 +108,60 @@ def MikkiCommand(textRU):
     elif (distance < 5):
         deafCommand = closest_command
         print("Не расслышал: ", closest_command, "distance",  distance)
-        if (commands.get(closest_command).get('voice')):
-            voice(commands.get(closest_command).get('voice'))
+        notify(" Вы иммелли ввиду " + closest_command + "?"  )
+        voice("deactivate")
         return False  # Возвращаем False, если команда не распознана
 
 def wordDelete(text):
+    global deleteName
+    global Name
     for NameText in Name:
         text = text.replace(NameText, "").strip()
+    for NameText in deleteName:
+         text = text.replace(NameText, "").strip()
     return text
+
+def searthCMD(textRU):
+    global search
+    if "найди" in textRU or search != "" :
+        search += textRU
+        google = commands.get("найди").get('command')
+        if textRU.strip() == "найди" :
+            search = " "
+            return False
+        search = search.replace('найди', "").strip()
+        search = search.replace(' ', '+').strip()
+        if search.strip()  == "":
+            return False
+        google = google.replace('[найди]', search)
+        
+        print("Запускаю команду: Найди")
+        voice("start_command")
+
+        try:
+            # Execute the command using subprocess
+            subprocess.Popen(google, shell=True)
+            search = ""
+        except Exception as e:
+            print("Ошибка при выполнении команды:", e)
+        return True
+    if "папка" in textRU or search != "" :
+        search += textRU
+        folder = commands.get("папка").get('command')
+        search = search.replace('папка', "").strip()
+        if search.strip()  == "":
+            return False
+        folder = folder.replace('[папка]', search)
+        print("Запускаю команду: Папка")
+        voice("start_command")
+
+        try:
+            # Execute the command using subprocess
+            subprocess.Popen(folder, shell=True)
+            search = ""
+        except Exception as e:
+            print("Ошибка при выполнении команды:", e)
+        return True
+
+def notify(text, header = "Микки"):
+    subprocess.Popen("notify-send \"" + header +"\" \"" + text + "\""  , shell=True)
