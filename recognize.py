@@ -33,7 +33,7 @@ print("Слушаю...")
 Mikki.voice('weke_up')
 initMikkiBool = False
 init_time = None
-live_time = 40
+live_time = 20
 listen_time = 2
 ini_listen = None
 previous_textRU = ""
@@ -60,7 +60,7 @@ try:
 
         if  textRU and textRU != previous_textRU:
             previous_textRU = textRU
-            print(textRU)
+            # print(textRU)
             final_text = textRU.strip()  # Добавляем новое распознанное слово
             # print("textRU :", textRU)
             # print("final_text :", final_text.strip())
@@ -80,7 +80,7 @@ try:
             final_text = ""
             last_update_time = time.time()  # Обновляем время последнего обновления
 
-        if init_time is not None and time.time() - init_time > live_time:
+        if init_time is not None and time.time() - init_time > live_time and initMikkiBool:
             print("Микки уснул...")
             Mikki.voice("sleep")
             final_text = ""

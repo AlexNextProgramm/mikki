@@ -1,0 +1,65 @@
+#!/bin/bash
+
+# Функция для поиска окна с "Яндекс Музыка"
+function find_yandex_music_window {
+    wmctrl -l | grep "Яндекс Музыка" | awk '{print $1}'
+}
+
+# Функция для поиска окон Chrome
+function find_chrome_windows {
+    wmctrl -l | grep "Google Chrome" | awk '{print $1}'
+}
+
+# Функция для переключения на вкладку "Яндекс Музыка"
+function switch_to_yandex_music_tab {
+    # Получаем список всех окон Chrome
+    local chrome_window_ids=($(find_chrome_windows))
+    
+    if [ ${#chrome_window_ids[@]} -eq 0 ]; then
+        google-chrome https://music.yandex.ru/
+        sleep 3
+        return
+    fi
+
+    # Перебираем все найденные окна Chrome
+    for chrome_window_id in "${chrome_window_ids[@]}"; do
+        # Активируем текущее окно Chrome
+        wmctrl -ia "$chrome_window_id"
+        sleep 0.5  # Задержка для активации окна
+
+        # Переключаемся на вкладку "Яндекс Музыка"
+        xdotool key ctrl+shift+a  # Открываем поиск по вкладкам
+        sleep 0.5
+        xdotool type "Яндекс Музыка"  # Вводим название вкладки
+        sleep 0.5
+        xdotool key Return  # Выбираем вкладку
+
+        sleep 1  # Задержка для переключения
+        if xdotool getactivewindow getwindowname | grep -q "Яндекс Музыка"; then
+            return  # Если вкладка активирована, выходим из функции
+        fi
+    done
+
+    google-chrome https://music.yandex.ru/
+    sleep 3
+    return
+}
+
+# Основная логика
+yandex_music_window_id=$(find_yandex_music_window)
+
+if [ -n "$yandex_music_window_id" ]; then
+    wmctrl -ia "$yandex_music_window_id"
+else
+    switch_to_yandex_music_tab
+fi
+
+# Сбрасываем фокус на первую вкладку и отступаем на 10 вкладок
+sleep 1
+xdotool key ctrl+l  # Переключаемся на первую вкладку
+sleep 0.2
+for ((i = 0; i < 13; i++)); do
+    xdotool key Tab  # Переключаемся на следующую вкладку
+    sleep 0.2  # Задержка между переключениями
+done
+xdotool key Return

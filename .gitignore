@@ -1,5 +1,7 @@
-model/vosk-model-small-en-us-0.15
+model/vosk-model-small-en-us-0.15/*
 
 venv
 
-model/vosk-model-small-ru-0.22
+model/vosk-model-small-ru-0.22/*
+nohup.out
+/journal/**

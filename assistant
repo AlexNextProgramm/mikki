@@ -15,5 +15,9 @@ fi
 
 PID=$$
 echo $PID > "$pid_file"
-~/Рабочий\ стол/PROJECT/mikki/venv/bin/python "/home/aleksandr/Рабочий стол/PROJECT/mikki/recognize.py"
+if [ "-fon" == "$1" ]; then
+    ~/Рабочий\ стол/PROJECT/mikki/venv/bin/python "/home/aleksandr/Рабочий стол/PROJECT/mikki/recognize.py" &
+else
+    ~/Рабочий\ стол/PROJECT/mikki/venv/bin/python "/home/aleksandr/Рабочий стол/PROJECT/mikki/recognize.py"
+fi
 

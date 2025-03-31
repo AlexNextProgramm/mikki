@@ -1,13 +1,13 @@
 # class/Comandos.py
 # Пример использования
-commandMiki = [ "бай", "стоп", "да", "отдыхай", "умри"]
+commandMiki = [ "бай", "стоп", "да", "отдыхай", "умри","отдыхать","отбой"]
 Name = { "привет микки", "микки", "мики", "веке", "мити", "никки", "ники"}
 delete = {"открой", "запусти", "стартуй", "привет", "хай"}
 commands = {
     "закрой браузер" : {'command' : "pkill chrome" , "voice" : "close_chrome" },
     "бразузер" : {'command' : "google-chrome" , "voice" : "open_chrome" },
     "гугл" : {'command' : "google-chrome" , "voice" : "open_chrome" },
-    "музыка": {'command' : "google-chrome https://music.yandex.ru/ "},
+    "музыка": {'command' : "/home/aleksandr/Рабочий\ стол/PROJECT/mikki/class/script/yandex_play"},
     "найди": { 'command': "google-chrome https://www.google.com/search?q=[найди]" },
     "проект трекер": {'command': "code /project/tracker-widget"},
     "проект си плюс плюс" : {'command': "code \"/home/aleksandr/Рабочий стол/PROJECT/C++\""},
@@ -22,6 +22,7 @@ commands = {
     "громкость сто процентов": {'command':'amixer set Master 100%'},
     "громкость двадцать процентов": {'command':'amixer set Master 20%'},
     "настройки экранов": { "command": " gnome-control-center display" },
-    "настройки": { "command": "gnome-control-center" },
+    "настройки": { "command": "DISPLAY=:1 gnome-terminal -- bash -c 'gnome-control-center'" },
+    "проснись": { "command": "code /project/tracker-widget && google-chrome https://tracker.yandex.ru/agile/board/13"}
 }
 

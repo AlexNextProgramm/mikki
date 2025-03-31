@@ -90,9 +90,9 @@ def MikkiCommand(textRU):
         sys.exit(0)
         # distance = 0
 
-    if ( cmdM == "стоп" or cmdM == "отдыхай" or cmdM == "бай" or cmdM == "отдыхать" ):
+    if ( cmdM == "стоп" or cmdM == "отдыхай" or cmdM == "бай" or cmdM == "отдыхать" or cmdM == "отбой" ):
         print("Деинциализация Микки")
-        voice("start_command")
+        voice("sleep")
         return True
 
     if distance <= 1:
